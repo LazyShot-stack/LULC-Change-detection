@@ -1,0 +1,18 @@
+URBAN LULC CHANGE DETECTION REPORT
+==================================
+
+Methodology: Analysis of Google Dynamic World V1 Dataset
+Classes: Dynamic World Schema (9 classes)
+
+Yearly Urban Area Statistics:
+-----------------------------
+2018: 73.11% Urban Coverage
+2019: 74.69% Urban Coverage
+2020: 75.27% Urban Coverage
+2021: 75.25% Urban Coverage
+2022: 76.43% Urban Coverage
+2023: 77.92% Urban Coverage
+2024: 79.14% Urban Coverage
+2025: 80.58% Urban Coverage
+
+Total Urban Growth (2018-2025): +7.46%

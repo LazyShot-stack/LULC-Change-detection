@@ -1,0 +1,6 @@
+earthengine-api>=0.1.300
+requests
+numpy
+rasterio
+scikit-learn
+matplotlib
