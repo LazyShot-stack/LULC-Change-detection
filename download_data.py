@@ -47,7 +47,6 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
     
     # Define Region of Interest (ROI) - Bangalore Center
-    # Creating a ~20km x 20km box (10km radius)
     point = ee.Geometry.Point([77.64, 13.05])
     roi = point.buffer(7500).bounds()
     region = roi.getInfo()['coordinates']
@@ -64,8 +63,6 @@ def main():
         start_date = f'{year}-01-01'
         end_date = f'{year}-12-31'
         
-        # --- 1. Download Sentinel-2 Image ---
-        # Filter for least cloudy image in the year
         s2 = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED") \
             .filterBounds(roi) \
             .filterDate(start_date, end_date) \
@@ -78,8 +75,6 @@ def main():
         print("Fetching Sentinel-2 image...")
         download_image(s2, 10, region, s2_filename)
         
-        # --- 2. Download Dynamic World Label (Ground Truth) ---
-        # Get the mode (most common class) for the year
         dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1") \
             .filterBounds(roi) \
             .filterDate(start_date, end_date) \

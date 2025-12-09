@@ -1,7 +1,7 @@
 import numpy as np
 import rasterio
 import matplotlib
-matplotlib.use('Agg') # Fix for "main thread is not in main loop" error
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
 from scipy.ndimage import median_filter
@@ -85,12 +85,10 @@ def save_plot(data, title, filename, rgb_img=None):
         
         plt.imshow(display_data)
     else:
-        # Classification Map
         from matplotlib.colors import ListedColormap
         cmap = ListedColormap(COLORS)
         plt.imshow(data, cmap=cmap, vmin=0, vmax=8, interpolation='nearest')
         
-        # Add legend
         patches = [plt.Rectangle((0,0),1,1, color=COLORS[i]) for i in range(9)]
         plt.legend(patches, CLASSES.values(), loc='center left', bbox_to_anchor=(1, 0.5))
 
@@ -106,7 +104,6 @@ def analyze_data():
     urban_stats = []
     years = range(2018, 2026)
     
-    # Ensure output directory exists
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     
     for year in years:
@@ -124,13 +121,12 @@ def analyze_data():
         lc_data, profile = load_image(lc_path)
         lc_data = lc_data.squeeze() # (H, W)
         
-        # Calculate Urban Area (Class 6)
+        # Calculate only Urban Area (Class 6) - I can find for other classes as well
         urban_pixels = np.sum(lc_data == 6)
         urban_pct = (urban_pixels / lc_data.size) * 100
         urban_stats.append((year, urban_pct))
         print(f"     -> Urban Coverage: {urban_pct:.2f}%")
         
-        # Save Visualization (Map)
         save_plot(lc_data, f"LULC Classification {year}", f"map_{year}.png")
         
         # Save RGB Reference (if available)
@@ -138,7 +134,6 @@ def analyze_data():
             raw_img, _ = load_image(s2_path)
             save_plot(None, f"Satellite Image {year}", f"satellite_{year}.png", rgb_img=raw_img)
         
-        # Save Classification TIF (Copy of Ground Truth)
         profile.update(count=1, dtype=rasterio.uint8)
         with rasterio.open(os.path.join(OUTPUT_DIR, f"classification_{year}.tif"), 'w', **profile) as dst:
             dst.write(lc_data.astype(rasterio.uint8), 1)
@@ -165,7 +160,6 @@ def analyze_data():
         plt.savefig(os.path.join(OUTPUT_DIR, "change_map.png"), bbox_inches='tight')
         print("Change map saved.")
 
-    # 5. Generate Report
     print("\nGenerating Report...")
     report_path = os.path.join(OUTPUT_DIR, "analysis_report.txt")
     with open(report_path, "w") as f:
